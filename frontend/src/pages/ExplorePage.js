@@ -1,17 +1,18 @@
 import Header from '../components/Header';
+import Filter from '../components/Filter';
+import Events from "../components/Events";
+
 
 function ExplorePage() {
     return (
         
       <div className="Explore-Page">
         <Header />
+        <div className='Explore-Page-Container flex min-h-screen'>
+        <Filter />
+        <Events />
 
-        <section id='Explore_Page'>
-            <div className="rightNav">
-                <input type="text" name="search" id="search" placeholder="Search"/>
-                <button className="btn btn-sm">Search</button>
-            </div>
-        </section>
+        </div>
       </div>
 
     );

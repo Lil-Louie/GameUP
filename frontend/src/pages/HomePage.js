@@ -5,7 +5,7 @@ function HomePage() {
     <div>
       <Header />
 
-      <h1 className="text-3xl font-bold underline">
+      <h1 className="flex justify-center text-3xl font-bold underline">
           Hello, welcome to GameUP!
       </h1>
 
