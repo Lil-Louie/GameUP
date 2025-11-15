@@ -5,14 +5,13 @@ function Events( {data} ) {
       {data.map((event) => (
         <section 
           key={event.id} 
-          className="Event-Cards border m-5 p-5 w-64 rounded-lg shadow"
+          className="Event-Cards border m-5 w-64 rounded-lg shadow-2xl "
         >
-          <h1 className="card-title text-xl font-bold mb-2">{event.name}</h1>
 
           <img 
             src={event.url} 
             alt={event.name} 
-            className="rounded-md mb-3 w-full h-32 object-cover"
+            className="rounded-md  w-full h-32 object-cover"
           />
 
           <div className="Event-description text-sm">

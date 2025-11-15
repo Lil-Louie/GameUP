@@ -36,6 +36,7 @@ function ExplorePage() {
       <h1 className="text-3xl font-bold mb-4 text-center">Explore</h1>
 
       <div className="p-4 bg-gray-200">
+        <SearchBar />
       </div>
       
         <Events data={filteredEvents} />
