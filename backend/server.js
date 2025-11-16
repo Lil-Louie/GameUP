@@ -3,6 +3,9 @@ import Router from "@koa/router";
 import bodyParser from "koa-bodyparser";
 import cors from "koa2-cors";
 
+import gamesRoutes from "./routes/games.js";
+
+
 const app = new Koa();
 const router = new Router();
 
@@ -12,6 +15,9 @@ app.use(bodyParser());
 router.get("/", (ctx) => {
   ctx.body = { message: "Koa backend running ✅" };
 });
+
+// mount /games routes
+router.use("/games", gamesRoutes.routes());
 
 app.use(router.routes());
 app.use(router.allowedMethods());
