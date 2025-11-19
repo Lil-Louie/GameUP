@@ -6,6 +6,7 @@ function Header() {
                     <li><a href="/" className="hover:text-blue-400">Logo</a></li>
                     <li><a href="/Explore" className="hover:text-blue-400">Games</a></li>
                     <li><a href="#Profile" className="hover:text-blue-400">Profile</a></li>
+                    <li><a href="/create-game" className="hover:text-blue-400">Create Game</a></li>
                 </ul>
             </nav>
         </div>

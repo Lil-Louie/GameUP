@@ -7,6 +7,7 @@ import {
 import './App.css';
 import HomePage from "./pages/HomePage"
 import ExplorePage from "./pages/ExplorePage"
+import CreatePage from "./pages/CreateGamePage";
 
 
 
@@ -16,6 +17,7 @@ function App() {
         <Routes>
           <Route exact path="/" element={<HomePage />} />
           <Route path="/Explore" element={<ExplorePage />} />
+            <Route path="/create-game" element={<CreatePage />} />
         </Routes>
       </Router>
   );
