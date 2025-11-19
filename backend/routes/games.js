@@ -1,18 +1,17 @@
 import Router from "@koa/router";
 import pool from "../db.js";
 
-const router = new Router();
+const router = new Router({
+    prefix: '/games'
+});
 
-/* =====================================
-   GET /games — fetch all games
-===================================== */
 router.get("/", async (ctx) => {
     try {
         const [rows] = await pool.query(`
-      SELECT * 
-      FROM games
-      ORDER BY date_time ASC
-    `);
+            SELECT *
+            FROM games
+            ORDER BY date_time ASC
+        `);
 
         ctx.body = rows;
     } catch (err) {
