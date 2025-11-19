@@ -15,7 +15,6 @@ async function testConnection() {
     try {
         const connection = await mysql.createConnection(dbConfig);
 
-        // simpler query
         const [rows] = await connection.query("SELECT NOW()");
         console.log("✅ Connected successfully!");
         console.log("Database time:", rows[0]['NOW()']);
