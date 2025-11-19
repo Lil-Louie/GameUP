@@ -17,8 +17,8 @@ function Events( {data} ) {
             className="rounded-md  w-full h-32 object-cover"
           />
 
-          <div className="Event-description text-sm">
-            <p className=" m-5 text-gray-600 "> {event.sport}</p >
+          <div className="Event-description m-8">
+            <p className="mb-8 text-gray-600 "> {event.sport}</p >
             <p className="text-base">{event.time} @ {event.name}</p>
             <p><strong>Players:</strong> {event.players_id.length}/{event.size}</p>
             <Button />

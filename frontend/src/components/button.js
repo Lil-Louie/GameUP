@@ -8,8 +8,8 @@ function Button() {
 
 
     return (
-        <button className=" flex align-center border m-5 px-6 bg-green-500 " onCLick={ joinEvent() }>
-            Join
+        <button className=" border mt-8  px-12 bg-blue-500 rounded " onCLick={ joinEvent() }>
+            Join Game 
         </button>
     
         );
