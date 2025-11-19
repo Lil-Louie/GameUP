@@ -7,12 +7,12 @@ function Button() {
     
 
 
-return (
-    <button onCLick={ joinEvent() }>
-        Join
-    </button>
-
-    );
-}
-
+    return (
+        <button className=" flex align-center border m-5 px-6 bg-green-500 " onCLick={ joinEvent() }>
+            Join
+        </button>
+    
+        );
+    }
+    
 export default Button;

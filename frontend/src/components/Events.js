@@ -1,3 +1,6 @@
+import Button from "./button";
+
+
 function Events( {data} ) {
   return (
     <section className="Card-Container border flex flex-wrap ml-5 mt-0.5 justify-center">
@@ -15,19 +18,10 @@ function Events( {data} ) {
           />
 
           <div className="Event-description text-sm">
-            <p><strong>Sport:</strong> {event.sport}</p>
-            <p><strong>Address:</strong> {event.address}</p>
-            <p><strong>Time:</strong> {event.time}</p>
-            <p><strong>Players:</strong> {event.players_id.length}</p>
-            {event.size && (
-              <p><strong>Size:</strong> {event.size}</p>
-            )}
-            <p>
-              <strong>Status:</strong>{" "}
-              <span className={event.status ? "text-green-600" : "text-red-600"}>
-                {event.status ? "Ready" : "Open"}
-              </span>
-            </p>
+            <p className=" m-5 text-gray-600 "> {event.sport}</p >
+            <p className="text-base">{event.time} @ {event.name}</p>
+            <p><strong>Players:</strong> {event.players_id.length}/{event.size}</p>
+            <Button />
           </div>
         </section>
       ))}
