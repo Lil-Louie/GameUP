@@ -2,7 +2,7 @@ import Koa from "koa";
 import bodyParser from "koa-bodyparser";
 import cors from "koa2-cors";
 
-import rootRouter from "./routes/index.js";
+import rootRouter from "./routes/gameUp_routes.js";
 
 const app = new Koa();
 

@@ -11,14 +11,9 @@ function Events( {data} ) {
           className="Event-Cards border m-5 w-64 rounded-lg shadow-2xl "
         >
 
-          <img 
-            src={event.url} 
-            alt={event.name} 
-            className="rounded-md  w-full h-32 object-cover"
-          />
 
           <div className="Event-description text-sm">
-            <p className=" m-5 text-gray-600 "> {event.sport}</p >
+            <p className=" m-5 text-gray-800 font-bold text-2xl"> {event.sport}</p >
             <p className="text-base">{event.time} @ {event.name}</p>
             <p><strong>Players:</strong> {event.players_id.length}/{event.size}</p>
             <Button />

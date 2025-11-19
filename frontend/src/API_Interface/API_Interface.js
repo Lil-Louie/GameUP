@@ -1,19 +1,33 @@
-import axios from 'axios';
+import axios from "axios";
 
 const axiosAgent = axios.create({
-    baseURL: 'http://localhost:3000',
-    withCredentials: true,
+    baseURL: "http://localhost:4000/api/v1",
+    withCredentials: false,   // no auth yet
     headers: {
-        'X-Requested-With': 'XMLHttpRequest'
+        "X-Requested-With": "XMLHttpRequest"
     }
 });
 
-
-
 export default class APIInterface {
 
-
-    async allgames() {
-        return axiosAgent.get(`all-games`);
+    async allGames() {
+        try {
+            const response = await axiosAgent.get("/games");
+            return response.data;
+        } catch (err) {
+            console.error("API ERROR (allGames):", err);
+            throw err;
+        }
     }
+
+    async createGame(gameData) {
+        try {
+            const response = await axiosAgent.post("/games", gameData);
+            return response.data;
+        } catch (err) {
+            console.error("API ERROR (createGame):", err);
+            throw err;
+        }
+    }
+
 }
