@@ -4,10 +4,9 @@ import {
   Route,
 } from "react-router-dom";
 
-import './App.css';
 import HomePage from "./pages/HomePage"
 import ExplorePage from "./pages/ExplorePage"
-import CreatePage from "./pages/CreateGamePage";
+import CreatePage from "./pages/CreateGame";
 
 
 

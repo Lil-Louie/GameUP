@@ -12,10 +12,10 @@ function Events( {data} ) {
         >
 
 
-          <div className="Event-description text-sm">
+          <div className="Event-description text-sm text-center ">
             <p className=" m-5 text-gray-800 font-bold text-2xl"> {event.sport}</p >
-            <p className="text-base">{event.time} @ {event.name}</p>
-            <p><strong>Players:</strong> {event.players_id.length}/{event.size}</p>
+            <p className="text-base m-5  mb-0">{event.time} @ {event.name}</p>
+            <p className="ml-5"><strong>Players:</strong> {event.players_id.length}/{event.size}</p>
             <Button />
           </div>
         </section>
