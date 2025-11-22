@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Search, ChevronDown } from "lucide-react";
+import CGButton from "./CGButton";
 
 function SearchBar({ onSearch }) {
   const [query, setQuery] = useState("");
@@ -48,7 +49,7 @@ function SearchBar({ onSearch }) {
   };
 
   return (
-    <section className="w-full bg-gradient-to-r from-slate-50 to-slate-100 p-6 rounded-xl shadow-sm">
+    <section className="w-full bg-gray-900 from-slate-50 to-slate-100 p-6 rounded-xl shadow-sm">
       <div className="max-w-6xl mx-auto">
         {/* Search Input Section */}
         <div className="mb-4">
@@ -66,7 +67,7 @@ function SearchBar({ onSearch }) {
         </div>
 
         {/* Filters Section */}
-        <div className="flex flex-wrap items-center gap-4">
+        <div className="flex flex-wrap items-center gap-4 justify-center ">
           {/* Sport Dropdown Button */}
           <div className="relative">
             <button
@@ -167,7 +168,12 @@ function SearchBar({ onSearch }) {
               Clear
             </button>
           )}
+          <section className="justify-end">
+            <CGButton/>
+          </section>
+
         </div>
+
       </div>
     </section>
   );

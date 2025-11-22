@@ -1,10 +1,10 @@
 import { useState } from "react";
 import APIInterface from "../API_Interface/API_Interface";
-import Header from "../components//Header";
+import Modal from "./Modal";   // <-- import modal
 
 const API = new APIInterface();
 
-function CreateGamePage() {
+function CreateGame({ onClose }) {
     const [sport, setSport] = useState("");
     const [location, setLocation] = useState("");
     const [dateTime, setDateTime] = useState("");
@@ -20,18 +20,16 @@ function CreateGamePage() {
                 location,
                 date_time: dateTime,
                 max_players: maxPlayers,
-                created_by: 1, // TEMP — until auth is added
+                created_by: 1,
             };
 
             const response = await API.createGame(data);
             setMessage("Game created successfully! ID: " + response.game_id);
 
-            // Reset form
             setSport("");
             setLocation("");
             setDateTime("");
             setMaxPlayers(10);
-
         } catch (err) {
             console.error("Create game error:", err);
             setMessage("Failed to create game.");
@@ -39,11 +37,10 @@ function CreateGamePage() {
     };
 
     return (
-        <div className="min-h-screen p-6">
-            <Header />
-            <h1 className="text-3xl font-bold mb-4">Create a Game</h1>
+        <Modal onClose={onClose}>
+            <h1 className="text-2xl font-bold mb-4">Create a Game</h1>
 
-            <form onSubmit={handleSubmit} className="max-w-md space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
 
                 <div>
                     <label className="block font-semibold">Sport</label>
@@ -89,14 +86,14 @@ function CreateGamePage() {
                     />
                 </div>
 
-                <button className="bg-blue-600 text-white px-4 py-2 rounded border-4 border-red-600">
+                <button className="bg-blue-600 text-white w-full py-2 rounded">
                     Create Game
                 </button>
 
-                {message && <p className="mt-4">{message}</p>}
+                {message && <p className="text-center mt-4">{message}</p>}
             </form>
-        </div>
+        </Modal>
     );
 }
 
-export default CreateGamePage;
+export default CreateGame;

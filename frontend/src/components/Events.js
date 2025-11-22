@@ -1,22 +1,27 @@
 import Button from "./button";
+import fieldImg from "../assets/field.jpg";
+
+<img src={fieldImg} alt="Field" />
 
 
 function Events( {data} ) {
   return (
-    <section className="Card-Container border flex flex-wrap ml-5 mt-0.5 justify-center">
+    <section className="Card-Container border flex flex-wrap mx-5 mt-0.5 justify-center bg-gray-900 rounded-xl">
       
       {data.map((event) => (
         <section 
           key={event.id} 
-          className="Event-Cards border m-5 w-64 rounded-lg shadow-2xl "
+          className="Event-Cards border m-5 w-100 h-122 rounded-xl bg-white "
         >
-
-
-          <div className="Event-description text-sm text-center ">
-            <p className=" m-5 text-gray-800 font-bold text-2xl"> {event.sport}</p >
-            <p className="text-base m-5  mb-0">{event.time} @ {event.name}</p>
-            <p className="ml-5"><strong>Players:</strong> {event.players_id.length}/{event.size}</p>
-            <Button />
+          <div className="Event-description text-sm ">
+            <img src={fieldImg} className="h-70 w-100 rounded-md"/>
+            <p className="m-5 text-gray-800 font-bold text-2xl text-center"> {event.sport}</p >
+            <p className="ml-5 text-base">{event.time}</p>
+            <p className="ml-5"><strong>Location:</strong> {event.name}</p>
+            <p className="ml-5 pl-0"><strong>Players:</strong> {event.players_id.length}/{event.size}</p>
+            <section className="flex justify-center ">
+              <Button/>
+            </section>
           </div>
         </section>
       ))}

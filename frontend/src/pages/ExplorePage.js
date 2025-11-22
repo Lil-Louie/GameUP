@@ -12,6 +12,25 @@ function ExplorePage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+
+    //Format Date function
+    function formatDate(input) {
+        const d = new Date(input);
+      
+        const dayOfWeek = d.toLocaleDateString("en-US", { weekday: "long" });
+        const month = d.getMonth() + 1;     // 0-based
+        const day = d.getDate();
+        const time = d.toLocaleTimeString("en-US", {
+          hour: "numeric",
+          minute: "2-digit",
+          hour12: true,
+        });
+      
+        return `${dayOfWeek} ${month}/${day} @ ${time}`;
+      }
+      
+
+
     // ==========================================================
     // FETCH REAL GAMES FROM BACKEND
     // ==========================================================
@@ -28,8 +47,8 @@ function ExplorePage() {
                     name: g.location,
                     sport: g.sport,
                     address: g.location,
-                    time: new Date(g.date_time).toLocaleString(),
-                    url: "https://unsplash.com/photos/white-and-black-soccer-ball-on-grass-field-dKCKiC0BQtU", // until you add images
+                    time: formatDate(g.date_time),
+                    url: "/assets/field.png", // until you add images
                     players_id: [], // placeholder until players table
                     size: g.max_players,
                 }));
@@ -97,9 +116,8 @@ function ExplorePage() {
         <div className="Explore-Page min-h-screen">
             <Header />
 
-            <h1 className="text-3xl font-bold mb-4 text-center">Explore</h1>
 
-            <div className="p-4 bg-gray-200">
+            <div className="p-4 bg-white">
                 <SearchBar onSearch={handleSearch} />
             </div>
 

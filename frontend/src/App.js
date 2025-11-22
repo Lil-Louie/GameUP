@@ -6,7 +6,7 @@ import {
 
 import HomePage from "./pages/HomePage"
 import ExplorePage from "./pages/ExplorePage"
-import CreatePage from "./pages/CreateGame";
+import CreatePage from "./components/CreateGame";
 
 
 
