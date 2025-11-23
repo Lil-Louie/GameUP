@@ -1,4 +1,4 @@
-function Header() {
+function Header({onLogin}) {
     return (
         <div>
             {/*This is a the navbar container, uses flex to organize the items*/}
@@ -10,10 +10,12 @@ function Header() {
                     <li><a href="#Profile" className="hover:text-blue-400">Profile</a></li>
                 </ul>
 
-                {/*This is the login link*/}
-                <a href="/Login" className=" text-white  py-1 px-10 hover:text-blue-400">
+                <button
+                    onClick={onLogin}
+                    className="text-white py-1 px-10 hover:text-blue-400"
+                >
                     Log in
-                </a>
+                </button>
 
             </nav>
         </div>

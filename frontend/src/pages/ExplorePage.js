@@ -3,6 +3,8 @@ import Header from "../components/Header";
 import Events from "../components/Events";
 import SearchBar from "../components/SearchBar";
 import APIInterface from "../API_Interface/API_Interface";
+import Login from "../components/Login";
+
 
 const API = new APIInterface();
 
@@ -11,6 +13,8 @@ function ExplorePage() {
     const [filteredEvents, setFilteredEvents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [openLogin, setOpenLogin] = useState(false);
+
 
 
     //Format Date function
@@ -114,8 +118,14 @@ function ExplorePage() {
     // ==========================================================
     return (
         <div className="Explore-Page min-h-screen">
-            <Header />
+            
+            <div>
+                <Header onLogin={() => setOpenLogin(true)} />
 
+                {openLogin && (
+                <Login onClose={() => setOpenLogin(false)} />
+                )}
+            </div>
 
             <div className="p-4 bg-white">
                 <SearchBar onSearch={handleSearch} />
