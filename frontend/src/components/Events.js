@@ -1,8 +1,6 @@
 import Button from "./button";
 import fieldImg from "../assets/field.jpg";
 
-<img src={fieldImg} alt="Field" />
-
 
 function Events( {data} ) {
   return (

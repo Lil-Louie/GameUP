@@ -1,5 +1,7 @@
 import Router from "@koa/router";
 import gamesRouter from "./games.js";
+import authRouter from "./auth.js";   // <-- ADD THIS
+
 
 // Parent router: /api/v1
 const router = new Router({

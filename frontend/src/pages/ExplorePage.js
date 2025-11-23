@@ -119,14 +119,6 @@ function ExplorePage() {
     return (
         <div className="Explore-Page min-h-screen">
             
-            <div>
-                <Header onLogin={() => setOpenLogin(true)} />
-
-                {openLogin && (
-                <Login onClose={() => setOpenLogin(false)} />
-                )}
-            </div>
-
             <div className="p-4 bg-white">
                 <SearchBar onSearch={handleSearch} />
             </div>

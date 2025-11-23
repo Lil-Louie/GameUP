@@ -4,21 +4,23 @@ import {
   Route,
 } from "react-router-dom";
 
+import MainLayout from "./layout/MainLayout";
+
 import HomePage from "./pages/HomePage"
 import ExplorePage from "./pages/ExplorePage"
-import CreatePage from "./components/CreateGame";
-
-
+import Profile from "./pages/Profile";
 
 function App() {
   return (
-      <Router>
+    <Router>
+      <MainLayout>
         <Routes>
-          <Route exact path="/" element={<HomePage />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/Explore" element={<ExplorePage />} />
-            <Route path="/create-game" element={<CreatePage />} />
+          <Route path="/Profile" element={<Profile />} />
         </Routes>
-      </Router>
+      </MainLayout>
+    </Router>
   );
 }
 

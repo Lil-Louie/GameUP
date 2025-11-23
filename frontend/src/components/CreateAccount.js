@@ -1,9 +1,9 @@
 import Modal from "./Modal";
 
-function Login({ onClose, switchToCreate }) {
+function CreateAccount({ onClose, switchToLogin }) {
   return (
     <Modal onClose={onClose}>
-      <h1 className="text-2xl font-bold mb-4">Login</h1>
+      <h1 className="text-2xl font-bold mb-4">Create Account</h1>
 
       <div className="space-y-4">
         {/* Username */}
@@ -12,7 +12,7 @@ function Login({ onClose, switchToCreate }) {
           <input
             type="text"
             id="uname"
-            placeholder="Enter Username"
+            placeholder="Choose a Username"
             className="border p-2 w-full rounded"
             required
           />
@@ -24,35 +24,41 @@ function Login({ onClose, switchToCreate }) {
           <input
             type="password"
             id="psw"
-            placeholder="Enter Password"
+            placeholder="Create Password"
             className="border p-2 w-full rounded"
             required
           />
         </div>
 
-        {/* Remember Me */}
-        <label className="flex items-center gap-2">
-          <input type="checkbox" defaultChecked />
-          <span>Remember me</span>
-        </label>
+        {/* Confirm Password */}
+        <div>
+          <label htmlFor="confirm" className="block font-semibold">Confirm Password</label>
+          <input
+            type="password"
+            id="confirm"
+            placeholder="Confirm Password"
+            className="border p-2 w-full rounded"
+            required
+          />
+        </div>
 
-        {/* Login Button */}
+        {/* Create Button */}
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded mt-4"
+          className="w-full bg-green-600 text-white py-2 rounded mt-4"
         >
-          Login
+          Create Account
         </button>
 
-        {/* Switch to Create Account */}
+        {/* Switch back to Login */}
         <p className="text-center text-sm mt-2">
-          Don’t have an account?{" "}
+          Already have an account?{" "}
           <button
             type="button"
-            onClick={switchToCreate}
+            onClick={switchToLogin}
             className="text-blue-600 underline hover:text-blue-800"
           >
-            Create one
+            Log in
           </button>
         </p>
       </div>
@@ -60,4 +66,4 @@ function Login({ onClose, switchToCreate }) {
   );
 }
 
-export default Login;
+export default CreateAccount;
