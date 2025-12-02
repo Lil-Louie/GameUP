@@ -64,6 +64,47 @@ router.post("/", async (ctx) => {
     }
 });
 
+
+// =====================================
+// GET /games/byUser/:id — games created by user
+// =====================================
+router.get("/byUser/:id", async (ctx) => {
+    try {
+        const userId = ctx.params.id;
+
+        const [rows] = await pool.query(
+            `
+            SELECT 
+                g.game_id,
+                g.sport,
+                g.location,
+                g.date_time,
+                g.max_players,
+                g.created_by,
+                g.created_at,
+                COUNT(p.participant_id) AS player_count
+            FROM games g
+            LEFT JOIN participants p ON g.game_id = p.game_id
+            WHERE g.created_by = ?
+            GROUP BY g.game_id
+            ORDER BY g.date_time ASC
+            `,
+            [userId]
+        );
+
+        ctx.body = rows;
+    } catch (err) {
+        console.error("Error fetching user games:", err);
+        ctx.status = 500;
+        ctx.body = { error: "Database error" };
+    }
+});
+
+
+
+export default router;
+
+
 router.post("/:id/join", async (ctx) => {
     try {
         const { user_id } = ctx.request.body;
@@ -94,7 +135,3 @@ router.post("/:id/join", async (ctx) => {
     }
 });
 
-
-
-
-export default router;

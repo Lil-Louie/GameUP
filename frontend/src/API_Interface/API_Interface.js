@@ -38,4 +38,10 @@ export default class APIInterface {
         return response.data;
     }
 
+    async getGamesByUser(userId) {
+        const response = await axiosAgent.get(`/games/byUser/${userId}`);
+        return response.data;
+    }
+
+
 }
