@@ -1,33 +1,33 @@
+// frontend/src/API_Interface/API_Interface.js
 import axios from "axios";
 
 const axiosAgent = axios.create({
-    baseURL: "http://localhost:4000/api/v1",
-    withCredentials: false,   // no auth yet
-    headers: {
-        "X-Requested-With": "XMLHttpRequest"
-    }
+  baseURL: "http://localhost:4000/api/v1",
+  withCredentials: false,
+  headers: {
+    "X-Requested-With": "XMLHttpRequest",
+  },
 });
 
 export default class APIInterface {
+  async allGames() {
+    const response = await axiosAgent.get("/games");
+    return response.data;
+  }
 
-    async allGames() {
-        try {
-            const response = await axiosAgent.get("/games");
-            return response.data;
-        } catch (err) {
-            console.error("API ERROR (allGames):", err);
-            throw err;
-        }
-    }
+  async createGame(gameData) {
+    const response = await axiosAgent.post("/games", gameData);
+    return response.data;
+  }
 
-    async createGame(gameData) {
-        try {
-            const response = await axiosAgent.post("/games", gameData);
-            return response.data;
-        } catch (err) {
-            console.error("API ERROR (createGame):", err);
-            throw err;
-        }
-    }
+  async createAccount(accountData) {
+    // ⬇️ VERY IMPORTANT: no /api/v1 here, baseURL already has it
+    const response = await axiosAgent.post("/auth/register", accountData);
+    return response.data;
+  }
 
+  async login(credentials) {
+    const response = await axiosAgent.post("/auth/login", credentials);
+    return response.data;
+  }
 }

@@ -3,68 +3,89 @@ import pool from "../db.js";
 import bcrypt from "bcrypt";
 
 const router = new Router({
-    prefix: "/auth"
+  prefix: "/auth",
 });
 
-// REGISTER
+// REGISTER: expects { username, email, password }
 router.post("/register", async (ctx) => {
-    const { username, password, dob } = ctx.request.body;
+  try {
+    const { username, email, password } = ctx.request.body;
 
-    if (!username || !password) {
-        ctx.status = 400;
-        ctx.body = { error: "Username and password required" };
-        return;
+    if (!username || !email || !password) {
+      ctx.status = 400;
+      ctx.body = { error: "Username, email, and password are required" };
+      return;
     }
 
+    // Check if username or email already exist
     const [existing] = await pool.query(
-        "SELECT id FROM users WHERE username = ?",
-        [username]
+      "SELECT user_id FROM users WHERE username = ? OR email = ?",
+      [username, email]
     );
 
     if (existing.length > 0) {
-        ctx.status = 400;
-        ctx.body = { error: "Username already taken" };
-        return;
+      ctx.status = 400;
+      ctx.body = { error: "Username or email already in use" };
+      return;
     }
 
     const hashed = await bcrypt.hash(password, 10);
 
     await pool.query(
-        "INSERT INTO users (username, password, dob) VALUES (?, ?, ?)",
-        [username, hashed, dob || null]
+      "INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)",
+      [username, email, hashed]
     );
 
     ctx.body = { message: "Account created" };
+  } catch (err) {
+    console.error("REGISTER ERROR:", err);
+    ctx.status = 500;
+    ctx.body = { error: "Internal server error" };
+  }
 });
 
-// LOGIN
+// LOGIN: login by username (could also add email support later)
 router.post("/login", async (ctx) => {
+  try {
     const { username, password } = ctx.request.body;
 
+    if (!username || !password) {
+      ctx.status = 400;
+      ctx.body = { error: "Username and password are required" };
+      return;
+    }
+
     const [rows] = await pool.query(
-        "SELECT * FROM users WHERE username = ?",
-        [username]
+      "SELECT * FROM users WHERE username = ?",
+      [username]
     );
 
     if (rows.length === 0) {
-        ctx.status = 400;
-        ctx.body = { error: "Invalid login" };
-        return;
+      ctx.status = 400;
+      ctx.body = { error: "Invalid login" };
+      return;
     }
 
     const user = rows[0];
-    const match = await bcrypt.compare(password, user.password);
 
+    const match = await bcrypt.compare(password, user.password_hash);
     if (!match) {
-        ctx.status = 400;
-        ctx.body = { error: "Invalid login" };
-        return;
+      ctx.status = 400;
+      ctx.body = { error: "Invalid login" };
+      return;
     }
 
     ctx.body = {
-        message: "Login successful",
-        userId: user.id
+      message: "Login successful",
+      userId: user.user_id,
+      username: user.username,
+      email: user.email,
     };
+  } catch (err) {
+    console.error("LOGIN ERROR:", err);
+    ctx.status = 500;
+    ctx.body = { error: "Internal server error" };
+  }
 });
 
 export default router;

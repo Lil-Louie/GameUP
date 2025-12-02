@@ -1,6 +1,6 @@
 import Router from "@koa/router";
 import gamesRouter from "./games.js";
-import authRouter from "./auth.js";   // <-- ADD THIS
+import authRouter from "./auth.js";   
 
 
 // Parent router: /api/v1
@@ -18,5 +18,10 @@ router.use(
     gamesRouter.routes(),
     gamesRouter.allowedMethods()
 );
+
+router.use(
+    authRouter.routes(),
+    authRouter.allowedMethods()
+  );
 
 export default router;

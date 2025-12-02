@@ -1,38 +1,85 @@
+import { useState } from "react";
+import APIInterface from "../API_Interface/API_Interface";
 import Modal from "./Modal";
 
+const API = new APIInterface();
+
 function Login({ onClose, switchToCreate }) {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [remember, setRemember] = useState(true);
+  const [message, setMessage] = useState("");
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    try {
+      const data = {
+        username,
+        password,
+      };
+
+      const response = await API.login(data);
+
+      // Example: if backend returns a token, you might store it
+      // if (remember && response.token) {
+      //   localStorage.setItem("authToken", response.token);
+      // }
+
+      setMessage("Login successful!");
+
+      // Optionally close modal or reset fields here
+      // onClose();
+    } catch (err) {
+      console.error("Login error:", err);
+      setMessage("Failed to log in. Check your username or password.");
+    }
+  };
+
   return (
     <Modal onClose={onClose}>
       <h1 className="text-2xl font-bold mb-4">Login</h1>
 
-      <div className="space-y-4">
+      <form onSubmit={handleLogin} className="space-y-4">
         {/* Username */}
         <div>
-          <label htmlFor="uname" className="block font-semibold">Username</label>
+          <label htmlFor="uname" className="block font-semibold">
+            Username
+          </label>
           <input
             type="text"
             id="uname"
             placeholder="Enter Username"
             className="border p-2 w-full rounded"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             required
           />
         </div>
 
         {/* Password */}
         <div>
-          <label htmlFor="psw" className="block font-semibold">Password</label>
+          <label htmlFor="psw" className="block font-semibold">
+            Password
+          </label>
           <input
             type="password"
             id="psw"
             placeholder="Enter Password"
             className="border p-2 w-full rounded"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
 
         {/* Remember Me */}
         <label className="flex items-center gap-2">
-          <input type="checkbox" defaultChecked />
+          <input
+            type="checkbox"
+            checked={remember}
+            onChange={(e) => setRemember(e.target.checked)}
+          />
           <span>Remember me</span>
         </label>
 
@@ -43,6 +90,13 @@ function Login({ onClose, switchToCreate }) {
         >
           Login
         </button>
+
+        {/* Message */}
+        {message && (
+          <p className="text-center text-sm mt-2">
+            {message}
+          </p>
+        )}
 
         {/* Switch to Create Account */}
         <p className="text-center text-sm mt-2">
@@ -55,7 +109,7 @@ function Login({ onClose, switchToCreate }) {
             Create one
           </button>
         </p>
-      </div>
+      </form>
     </Modal>
   );
 }
