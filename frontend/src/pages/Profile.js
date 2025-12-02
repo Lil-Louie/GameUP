@@ -11,7 +11,19 @@ function Profile() {
         
     }
     const currentUser = JSON.parse(localStorage.getItem("user"));
-    const username = currentUser.username;
+
+
+    if (!currentUser) {
+        return (
+            <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
+                <h1 className="text-3xl">Please log in to view your profile.</h1>
+            </div>
+        );
+    }
+
+
+    const userName = currentUser.username;
+
 
     return (
         <div className="profile-container text-white min-h-screen bg-gray-900">
@@ -44,7 +56,7 @@ function Profile() {
                     {selectedTab === "home" && (
                         <section className='profile-container'>
                             <div className="mini-nav flex justify-between items-center"> 
-                                <h1 className="text-3xl font-bold">{username}</h1>
+                                <h1 className="text-3xl font-bold">{userName} </h1>
                             </div>
 
                             <div className='profile flex flex-col items-center text-center mt-20'>

@@ -2,7 +2,7 @@ import Button from "./button";
 import fieldImg from "../assets/field.jpg";
 
 
-function Events( {data} ) {
+function Events( {data, onJoinedGame} ) {
   return (
     <section className="Card-Container border flex flex-wrap mx-5 mt-0.5 justify-center bg-gray-900 rounded-xl">
       
@@ -18,7 +18,7 @@ function Events( {data} ) {
             <p className="ml-5"><strong>Location:</strong> {event.name}</p>
             <p className="ml-5 pl-0"><strong>Players:</strong> {event.playercount}/{event.size}</p>
             <section className="flex justify-center ">
-              <Button/>
+              <Button gameId={event.id} onJoined={onJoinedGame}/>
             </section>
           </div>
         </section>

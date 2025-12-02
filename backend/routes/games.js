@@ -5,6 +5,9 @@ const router = new Router({
     prefix: '/games'
 });
 
+/* =====================================
+   GET /games — pull all the games and the players
+===================================== */
 router.get("/", async (ctx) => {
     try {
         const [rows] = await pool.query(`
@@ -60,6 +63,38 @@ router.post("/", async (ctx) => {
         ctx.body = { error: "Database error" };
     }
 });
+
+router.post("/:id/join", async (ctx) => {
+    try {
+        const { user_id } = ctx.request.body;
+        const gameId = ctx.params.id;
+
+        // Check if user already joined
+        const [existing] = await pool.query(
+            `SELECT participant_id FROM participants WHERE user_id=? AND game_id=?`,
+            [user_id, gameId]
+        );
+
+        if (existing.length > 0) {
+            ctx.status = 400;
+            ctx.body = { error: "Already joined" };
+            return;
+        }
+
+        await pool.query(
+            `INSERT INTO participants (user_id, game_id, joined_at) VALUES (?, ?, NOW())`,
+            [user_id, gameId]
+        );
+
+        ctx.body = { message: "Joined game successfully" };
+
+    } catch (err) {
+        ctx.status = 500;
+        ctx.body = { error: "Database error" };
+    }
+});
+
+
 
 
 export default router;

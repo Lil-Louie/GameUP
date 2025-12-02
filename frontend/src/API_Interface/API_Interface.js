@@ -30,4 +30,12 @@ export default class APIInterface {
     const response = await axiosAgent.post("/auth/login", credentials);
     return response.data;
   }
+
+    async joinGame(gameId, userId) {
+        const response = await axiosAgent.post(`/games/${gameId}/join`, {
+            user_id: userId
+        });
+        return response.data;
+    }
+
 }
