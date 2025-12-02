@@ -16,7 +16,7 @@ function Events( {data} ) {
             <p className="m-5 text-gray-800 font-bold text-2xl text-center"> {event.sport}</p >
             <p className="ml-5 text-base">{event.time}</p>
             <p className="ml-5"><strong>Location:</strong> {event.name}</p>
-            <p className="ml-5 pl-0"><strong>Players:</strong> {event.players_id.length}/{event.size}</p>
+            <p className="ml-5 pl-0"><strong>Players:</strong> {event.playercount}/{event.size}</p>
             <section className="flex justify-center ">
               <Button/>
             </section>

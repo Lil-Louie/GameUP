@@ -10,7 +10,8 @@ function Profile() {
     function addAsFriend(){
         
     }
-    
+    const currentUser = JSON.parse(localStorage.getItem("user"));
+    const username = currentUser.username;
 
     return (
         <div className="profile-container text-white min-h-screen bg-gray-900">
@@ -43,7 +44,7 @@ function Profile() {
                     {selectedTab === "home" && (
                         <section className='profile-container'>
                             <div className="mini-nav flex justify-between items-center"> 
-                                <h1 className="text-3xl font-bold">Ladiesman127</h1> 
+                                <h1 className="text-3xl font-bold">{username}</h1>
                             </div>
 
                             <div className='profile flex flex-col items-center text-center mt-20'>

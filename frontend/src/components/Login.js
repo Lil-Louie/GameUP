@@ -21,6 +21,12 @@ function Login({ onClose, switchToCreate }) {
 
       const response = await API.login(data);
 
+      localStorage.setItem("user", JSON.stringify({
+          userId: response.userId,
+          username: response.username,
+          email: response.email
+      }));
+
       // Example: if backend returns a token, you might store it
       // if (remember && response.token) {
       //   localStorage.setItem("authToken", response.token);

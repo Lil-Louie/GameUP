@@ -8,9 +8,21 @@ const router = new Router({
 router.get("/", async (ctx) => {
     try {
         const [rows] = await pool.query(`
-            SELECT *
-            FROM games
-            ORDER BY date_time ASC
+            SELECT
+                g.game_id,
+                g.sport,
+                g.location,
+                g.date_time,
+                g.max_players,
+                g.created_by,
+                g.created_at,
+                COUNT(p.participant_id) AS player_count
+            FROM games g
+                     LEFT JOIN participants p ON g.game_id = p.game_id
+            where g.date_time > NOW()
+            GROUP BY g.game_id
+            ORDER BY g.date_time ASC;
+
         `);
 
         ctx.body = rows;
@@ -20,6 +32,7 @@ router.get("/", async (ctx) => {
         ctx.body = { error: "Database error" };
     }
 });
+
 
 /* =====================================
    POST /games — create a new game

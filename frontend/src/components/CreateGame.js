@@ -11,6 +11,8 @@ function CreateGame({ onClose }) {
     const [maxPlayers, setMaxPlayers] = useState(10);
     const [message, setMessage] = useState("");
 
+    const currentUser = JSON.parse(localStorage.getItem("user"));
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -20,7 +22,7 @@ function CreateGame({ onClose }) {
                 location,
                 date_time: dateTime,
                 max_players: maxPlayers,
-                created_by: 1,
+                created_by: currentUser?.userId,
             };
 
             const response = await API.createGame(data);

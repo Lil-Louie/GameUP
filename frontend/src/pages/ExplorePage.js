@@ -53,7 +53,7 @@ function ExplorePage() {
                     address: g.location,
                     time: formatDate(g.date_time),
                     url: "/assets/field.png", // until you add images
-                    players_id: [], // placeholder until players table
+                    playercount: g.player_count, // placeholder until players table
                     size: g.max_players,
                 }));
 
