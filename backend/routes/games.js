@@ -22,10 +22,10 @@ router.get("/", async (ctx) => {
                 COUNT(p.participant_id) AS player_count
             FROM games g
                      LEFT JOIN participants p ON g.game_id = p.game_id
-            where g.date_time > NOW()
+            WHERE g.date_time > NOW()
             GROUP BY g.game_id
+            HAVING COUNT(p.participant_id) < g.max_players
             ORDER BY g.date_time ASC;
-
         `);
 
         ctx.body = rows;
@@ -35,6 +35,7 @@ router.get("/", async (ctx) => {
         ctx.body = { error: "Database error" };
     }
 });
+
 
 
 /* =====================================
@@ -166,15 +167,58 @@ router.get("/participating/:id", async (ctx) => {
 
 
 
-export default router;
 
+
+// GET /games/available/:userId  (games the user can still join)
+router.get("/available/:userId", async (ctx) => {
+    try {
+        const userId = ctx.params.userId;
+
+        const [rows] = await pool.query(`
+      SELECT
+        g.game_id,
+        g.sport,
+        g.location,
+        g.date_time,
+        g.max_players,
+        g.created_by,
+        g.created_at,
+        COUNT(p.participant_id) AS player_count
+      FROM games g
+      LEFT JOIN participants p ON p.game_id = g.game_id
+      WHERE g.date_time > NOW()
+        AND g.game_id NOT IN (
+          SELECT game_id FROM participants WHERE user_id = ?
+        )
+      GROUP BY g.game_id
+      HAVING player_count < g.max_players
+      ORDER BY g.date_time ASC
+    `, [userId]);
+
+        ctx.body = rows;
+    } catch (err) {
+        console.error("Error fetching available games:", err);
+        ctx.status = 500;
+        ctx.body = { error: "Database error" };
+    }
+});
+
+/* =====================================
+   set join a game
+===================================== */
 
 router.post("/:id/join", async (ctx) => {
     try {
         const { user_id } = ctx.request.body;
         const gameId = ctx.params.id;
 
-        // Check if user already joined
+        if (!user_id) {
+            ctx.status = 400;
+            ctx.body = { error: "User ID required" };
+            return;
+        }
+
+        // already joined?
         const [existing] = await pool.query(
             `SELECT participant_id FROM participants WHERE user_id=? AND game_id=?`,
             [user_id, gameId]
@@ -186,16 +230,80 @@ router.post("/:id/join", async (ctx) => {
             return;
         }
 
+        // capacity check
+        const [rows] = await pool.query(
+            `
+      SELECT 
+        g.max_players,
+        COUNT(p.participant_id) AS player_count
+      FROM games g
+      LEFT JOIN participants p ON g.game_id = p.game_id
+      WHERE g.game_id = ?
+      GROUP BY g.game_id
+      `,
+            [gameId]
+        );
+
+        if (rows.length === 0) {
+            ctx.status = 404;
+            ctx.body = { error: "Game not found" };
+            return;
+        }
+
+        const { max_players, player_count } = rows[0];
+
+        if (Number(player_count) >= Number(max_players)) {
+            ctx.status = 400;
+            ctx.body = { error: "Game is full" };
+            return;
+        }
+
         await pool.query(
             `INSERT INTO participants (user_id, game_id, joined_at) VALUES (?, ?, NOW())`,
             [user_id, gameId]
         );
 
         ctx.body = { message: "Joined game successfully" };
-
     } catch (err) {
+        console.error("Join game error:", err);
         ctx.status = 500;
         ctx.body = { error: "Database error" };
     }
 });
+
+// Leave a game
+router.post("/:id/leave", async (ctx) => {
+    try {
+        const gameId = ctx.params.id;
+        const { user_id } = ctx.request.body;
+
+        if (!user_id) {
+            ctx.status = 400;
+            ctx.body = { error: "User ID required" };
+            return;
+        }
+
+        const [result] = await pool.query(
+            `DELETE FROM participants WHERE user_id = ? AND game_id = ?`,
+            [user_id, gameId]
+        );
+
+        if (result.affectedRows === 0) {
+            ctx.status = 400;
+            ctx.body = { error: "You are not in this game" };
+            return;
+        }
+
+        ctx.body = { message: "Left game successfully" };
+    } catch (err) {
+        console.error("Leave game error:", err);
+        ctx.status = 500;
+        ctx.body = { error: "Database error" };
+    }
+});
+
+
+export default router;
+
+
 

@@ -49,4 +49,19 @@ export default class APIInterface {
         const response = await axiosAgent.get(`/games/participating/${userId}`);
         return response.data;
     }
+
+
+    async availableGames(userId) {
+        const response = await axiosAgent.get(`/games/available/${userId}`);
+        return response.data;
+    }
+
+    async leaveGame(gameId, userId) {
+        const response = await axiosAgent.post(`/games/${gameId}/leave`, {
+            user_id: userId,
+        });
+        return response.data;
+    }
+
 }
+

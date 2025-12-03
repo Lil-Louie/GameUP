@@ -32,8 +32,14 @@ function ExplorePage() {
     // Fetch all games (EXTRACTED so it can be called again)
     // ---------------------------------------------------
     const loadEvents = useCallback(async () => {
+
+        const rawUser = localStorage.getItem("user");
+        const currentUser = rawUser ? JSON.parse(rawUser) : null;
+
         try {
-            const data = await API.allGames();
+            const data = currentUser
+                ? await API.availableGames(currentUser.userId)
+                : await API.allGames();
 
             const mapped = data.map((g) => ({
                 id: g.game_id,
