@@ -106,43 +106,7 @@ function SearchBar({ onSearch }) {
             )}
           </div>
 
-          {/* Status Dropdown Button */}
-          <div className="relative">
-            <button
-              onClick={() => {
-                setStatusDropdownOpen(!statusDropdownOpen);
-                setSportDropdownOpen(false);
-              }}
-              className="px-4 py-2 bg-white border-2 border-gray-200 rounded-lg hover:border-blue-500 transition-colors shadow-sm flex items-center gap-2 min-w-[180px] justify-between"
-            >
-              <span className="text-gray-800 font-medium">
-                {status === "true" ? "Ready to Start" : status === "false" ? "Looking for Players" : "Any Status"}
-              </span>
-              <ChevronDown className={`w-4 h-4 text-gray-600 transition-transform ${statusDropdownOpen ? 'rotate-180' : ''}`} />
-            </button>
-            
-            {statusDropdownOpen && (
-              <div className="absolute top-full mt-2 w-full bg-white border-2 border-gray-200 rounded-lg shadow-lg z-10">
-                <button
-                  onClick={() => selectStatus("")}
-                  className="w-full px-4 py-2 text-left hover:bg-blue-50 transition-colors text-gray-800 border-b border-gray-100"
-                >
-                  Any Status
-                </button>
-                {statuses.map((s) => (
-                  <button
-                    key={s.value}
-                    onClick={() => selectStatus(s.value)}
-                    className={`w-full px-4 py-2 text-left hover:bg-blue-50 transition-colors ${
-                      status === s.value ? 'bg-blue-100 text-blue-700 font-medium' : 'text-gray-800'
-                    }`}
-                  >
-                    {s.label}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+
 
           {/* Search Button */}
           <button
