@@ -38,31 +38,58 @@ router.get("/", async (ctx) => {
 
 
 /* =====================================
-   POST /games — create a new game
+  POST /games — create a new game
 ===================================== */
 router.post("/", async (ctx) => {
+    let conn;
     try {
         const { sport, location, date_time, max_players, created_by } = ctx.request.body;
 
-        if (!sport || !location || !date_time || !max_players) {
+
+        if (!sport || !location || !date_time || !max_players || !created_by) {
             ctx.status = 400;
             ctx.body = { error: "Missing required fields" };
             return;
         }
 
-        const [result] = await pool.query(
+
+        conn = await pool.getConnection();
+        await conn.beginTransaction();
+
+
+        const [result] = await conn.query(
             `INSERT INTO games (sport, location, date_time, max_players, created_by, created_at)
-       VALUES (?, ?, ?, ?, ?, NOW())`,
-            [sport, location, date_time, max_players, created_by || 1] // TEMP: default user_id=1
+      VALUES (?, ?, ?, ?, ?, NOW())`,
+            [sport, location, date_time, max_players, created_by]
         );
 
-        ctx.body = { message: "Game created", game_id: result.insertId };
+
+        const gameId = result.insertId;
+
+
+
+        await conn.query(
+            `INSERT INTO participants (user_id, game_id, joined_at)
+            VALUES (?, ?, NOW())`,
+            [created_by, gameId]
+        );
+
+
+        await conn.commit();
+
+
+        ctx.body = { message: "Game created", game_id: gameId };
     } catch (err) {
+        if (conn) await conn.rollback();
         console.error("Error creating game:", err);
         ctx.status = 500;
         ctx.body = { error: "Database error" };
+    } finally {
+        if (conn) conn.release();
     }
 });
+
+
 
 
 // =====================================
@@ -95,6 +122,43 @@ router.get("/byUser/:id", async (ctx) => {
         ctx.body = rows;
     } catch (err) {
         console.error("Error fetching user games:", err);
+        ctx.status = 500;
+        ctx.body = { error: "Database error" };
+    }
+});
+
+/* =====================================
+   GET /games/participating/:id — games user joined but didn't create
+===================================== */
+router.get("/participating/:id", async (ctx) => {
+    try {
+        const userId = ctx.params.id;
+
+        const [rows] = await pool.query(
+            `
+            SELECT
+                g.game_id,
+                g.sport,
+                g.location,
+                g.date_time,
+                g.max_players,
+                g.created_by,
+                g.created_at,
+                COUNT(p2.participant_id) AS player_count
+            FROM participants p
+            JOIN games g ON p.game_id = g.game_id
+            LEFT JOIN participants p2 ON g.game_id = p2.game_id
+            WHERE p.user_id = ?
+              AND g.created_by <> ?
+            GROUP BY g.game_id
+            ORDER BY g.date_time ASC
+            `,
+            [userId, userId]
+        );
+
+        ctx.body = rows;
+    } catch (err) {
+        console.error("Error fetching participating games:", err);
         ctx.status = 500;
         ctx.body = { error: "Database error" };
     }
