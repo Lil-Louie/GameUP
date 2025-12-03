@@ -44,4 +44,9 @@ export default class APIInterface {
     }
 
 
+    // new crisp here 12.1
+    async getGamesParticipating(userId) {
+        const response = await axiosAgent.get(`/games/participating/${userId}`);
+        return response.data;
+    }
 }

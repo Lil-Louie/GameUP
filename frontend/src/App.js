@@ -15,7 +15,7 @@ function App() {
     <Router>
       <MainLayout>
         <Routes>
-          <Route path="/" element={<HomePage />} />
+
           <Route path="/Explore" element={<ExplorePage />} />
           <Route path="/Profile" element={<Profile />} />
         </Routes>

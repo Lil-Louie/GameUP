@@ -10,6 +10,8 @@ const API = new APIInterface();
 function Profile() {
     const [selectedTab, setSelectedTab] = useState("home");
     const [userGames, setUserGames] = useState([]);
+    //crisp added here 12.1
+    const [joinedGames, setJoinedGames] = useState([]);
 
     // read user once
     const [currentUser] = useState(() => {
@@ -45,6 +47,32 @@ function Profile() {
             }
         })();
     }, [selectedTab, currentUser]);
+ //crisp added 12.1  start
+    // Load games the user JOINED (not created)
+    useEffect(() => {
+        if (!currentUser) return;
+
+        (async () => {
+            try {
+                const data = await API.getGamesParticipating(currentUser.userId);
+
+                const mapped = data.map((g) => ({
+                    id: g.game_id,
+                    name: g.location,
+                    sport: g.sport,
+                    address: g.location,
+                    time: g.date_time,
+                    playercount: g.player_count,
+                    size: g.max_players,
+                }));
+
+                setJoinedGames(mapped);
+            } catch (err) {
+                console.error("Error loading joined games:", err);
+            }
+        })();
+    }, [currentUser]);
+//crisp added 12.1 end
 
     if (!currentUser) {
         return (
@@ -68,9 +96,7 @@ function Profile() {
                     <button onClick={() => setSelectedTab("games")} className="hover:text-blue-400">
                         Games
                     </button>
-                    <button onClick={() => setSelectedTab("friends")} className="hover:text-blue-400">
-                        Friends
-                    </button>
+
                 </div>
 
                 <div className="content-container flex-1 p-10 text-white">
@@ -86,6 +112,17 @@ function Profile() {
                                     <p>Hello, I play basketball.</p>
                                 </div>
                             </div>
+
+                            <div className="joined-games mt-12">
+                                <h2 className="text-2xl font-semibold mb-4">Games You're Playing In</h2>
+
+                                {joinedGames.length ? (
+                                    <Events data={joinedGames} />
+                                ) : (
+                                    <p>You haven't joined any games yet.</p>
+                                )}
+                            </div>
+
                         </section>
                     )}
 
