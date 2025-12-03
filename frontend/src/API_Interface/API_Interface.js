@@ -62,6 +62,20 @@ export default class APIInterface {
         });
         return response.data;
     }
+    async getAvatar(userId) {
+        const response = await axiosAgent.get(`/auth/avatar/${userId}`);
+        return response.data; // { avatarUrl }
+    }
+
+
+    async saveAvatar(userId, avatarUrl) {
+        const response = await axiosAgent.post("/auth/avatar", {
+            userId,
+            avatarUrl,
+        });
+        return response.data;
+}
+
 
 }
 

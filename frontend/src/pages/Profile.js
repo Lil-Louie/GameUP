@@ -16,6 +16,10 @@ function Profile() {
     const [loadingCreated, setLoadingCreated] = useState(false);
     const [loadingJoined, setLoadingJoined] = useState(false);
 
+    // 👇 avatar state (defaults to hamster)
+    const [profileImage, setProfileImage] = useState(HamsterImage);
+    const [avatarInput, setAvatarInput] = useState("");
+
     const currentUser = useMemo(() => {
         const raw = localStorage.getItem("user");
         return raw ? JSON.parse(raw) : null;
@@ -93,6 +97,34 @@ function Profile() {
         }
     }, [currentUser]);
 
+    // 👇 load avatar from DB when we know the user
+    useEffect(() => {
+        if (!currentUser) return;
+
+        (async () => {
+            try {
+                const { avatarUrl } = await API.getAvatar(currentUser.userId);
+                if (avatarUrl) {
+                    setProfileImage(avatarUrl);
+                    setAvatarInput(avatarUrl);
+                }
+            } catch (err) {
+                console.error("Error loading avatar:", err);
+            }
+        })();
+    }, [currentUser]);
+
+    // 👇 save avatar URL to DB
+    const handleSaveAvatar = async () => {
+        if (!currentUser || !avatarInput) return;
+        try {
+            await API.saveAvatar(currentUser.userId, avatarInput);
+            setProfileImage(avatarInput);
+        } catch (err) {
+            console.error("Error saving avatar:", err);
+        }
+    };
+
     // Load joined games on mount (Home uses them)
     useEffect(() => {
         if (!currentUser) return;
@@ -138,25 +170,57 @@ function Profile() {
                     {selectedTab === "home" && (
                         <section>
                             <div className="mini-nav flex justify-between items-center">
-                                <h1 className="text-3xl font-bold text-white">{currentUser.username}</h1>
+                                <h1 className="text-3xl font-bold text-white">
+                                    {currentUser.username}
+                                </h1>
                             </div>
 
                             <div className="profile flex flex-col items-center text-center mt-10 text-white ">
-                                <img src={HamsterImage} className="h-70 w-100 rounded-md" />
+                                {/* use DB-backed profile image instead of static HamsterImage */}
+                                <img
+                                    src={profileImage}
+                                    className="h-40 w-40 rounded-full object-cover border-4 border-blue-400"
+                                />
                                 <div className="mt-4">
                                     <p>Hello, I play basketball.</p>
+
+                                    {/* simple URL-based avatar editor */}
+                                    <div className="mt-4">
+                                        <p className="text-sm mb-1">
+                                            Profile picture URL (jpg/png):
+                                        </p>
+                                        <input
+                                            type="text"
+                                            value={avatarInput}
+                                            onChange={(e) => setAvatarInput(e.target.value)}
+                                            className="text-black px-2 py-1 rounded w-64"
+                                            placeholder="https://example.com/me.png"
+                                        />
+                                        <button
+                                            onClick={handleSaveAvatar}
+                                            className="ml-2 px-3 py-1 bg-blue-500 rounded text-white text-sm"
+                                        >
+                                            Save
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
 
                             <div className="joined-games mt-12">
-                                <h2 className="text-2xl font-semibold mb-4 text-white">Games You're Playing In</h2>
+                                <h2 className="text-2xl font-semibold mb-4 text-white">
+                                    Games You're Playing In
+                                </h2>
 
                                 {loadingJoined ? (
                                     <p>Loading…</p>
                                 ) : joinedGames.length ? (
-                                    // IMPORTANT: force dark text inside white cards so Location/Players/Buttons are visible
+                                    // IMPORTANT: force dark text inside white cards so
+                                    // Location/Players/Buttons are visible
                                     <div className="text-gray-900">
-                                        <JoinedEvents data={joinedGames} onJoinedGame={loadJoinedGames} />
+                                        <JoinedEvents
+                                            data={joinedGames}
+                                            onJoinedGame={loadJoinedGames}
+                                        />
                                     </div>
                                 ) : (
                                     <p>You haven't joined any games yet.</p>
@@ -168,13 +232,17 @@ function Profile() {
                     {/* GAMES TAB (created by user) */}
                     {selectedTab === "games" && (
                         <section>
-                            <h1 className="text-3xl font-bold mb-4 text-white">Your Created Games</h1>
+                            <h1 className="text-3xl font-bold mb-4 text-white">
+                                Your Created Games
+                            </h1>
 
                             {loadingCreated ? (
                                 <p>Loading…</p>
                             ) : (
                                 <>
-                                    <h2 className="text-xl font-semibold mt-6 mb-2 text-white">Upcoming Games</h2>
+                                    <h2 className="text-xl font-semibold mt-6 mb-2 text-white">
+                                        Upcoming Games
+                                    </h2>
                                     {upcomingCreated.length ? (
                                         <div className="text-gray-900">
                                             <ProfileEvents data={upcomingCreated} />
@@ -183,13 +251,15 @@ function Profile() {
                                         <p>No upcoming games.</p>
                                     )}
 
-                                    <h2 className="text-xl font-semibold mt-10 mb-2 text-white">Past Games</h2>
+                                    <h2 className="text-xl font-semibold mt-10 mb-2 text-white">
+                                        Past Games
+                                    </h2>
                                     {pastCreated.length ? (
-                                        <div className="text-gray-900 " >
+                                        <div className="text-gray-900">
                                             <ProfileEvents data={pastCreated} />
                                         </div>
                                     ) : (
-                                        <p >No past games.</p>
+                                        <p>No past games.</p>
                                     )}
                                 </>
                             )}

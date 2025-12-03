@@ -11,6 +11,7 @@ import soccer from "../assets/soccer.jpg";
 import tennis from "../assets/tennis.jpg";
 import waterpolo from "../assets/waterpolo.jpeg";
 import baseball from "../assets/baseball.webp";
+import stock from "../assets/stock.jpg";
 
 // image lookup table
 const sportImages = {
@@ -22,6 +23,7 @@ const sportImages = {
     pingpong,
     snowboarding,
     soccer,
+    stock,
     tennis,
     waterpolo,
 };
@@ -33,7 +35,7 @@ function Events({ data, onJoinedGame }) {
             {data.map((event) => {
                 // convert sport name to lowercase & remove spaces
                 const imgKey = event.sport.toLowerCase().replace(/\s+/g, "");
-                const sportImg = sportImages[imgKey] || fieldImg;
+                const sportImg = sportImages[imgKey] || stock;
 
                 return (
                     <section
