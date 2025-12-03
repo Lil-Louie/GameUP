@@ -70,26 +70,34 @@ function ExplorePage() {
     // ----------------------------------------------------------------
     // SEARCH FEATURE
     // ----------------------------------------------------------------
-    const handleSearch = ({ query, sport, status }) => {
-        let data = events;
+    // ExplorePage.js
+    const handleSearch = ({ query = "", sport = "", status = "" }) => {
+        let data = [...events];
 
-        if (query) {
-            data = data.filter((e) =>
-                e.name.toLowerCase().includes(query.toLowerCase()) ||
-                e.address.toLowerCase().includes(query.toLowerCase())
-            );
+        const q = query.trim().toLowerCase();
+        if (q) {
+            data = data.filter((e) => {
+                const name = (e.name ?? "").toLowerCase();
+                const address = (e.address ?? "").toLowerCase();
+                const sportName = (e.sport ?? "").toLowerCase();
+                return name.includes(q) || address.includes(q) || sportName.includes(q);
+            });
         }
 
         if (sport) {
-            data = data.filter((e) => e.sport === sport);
+            const s = sport.toLowerCase();
+            data = data.filter((e) => (e.sport ?? "").toLowerCase() === s);
         }
 
-        if (status !== "") {
-            data = data.filter((e) => String(e.status) === status);
+
+        if (status && data.length && data[0]?.status !== undefined) {
+            data = data.filter((e) => String(e.status) === String(status));
         }
 
         setFilteredEvents(data);
     };
+
+
 
     // ----------------------------------------------------------------
     // LOADING & ERROR UI
